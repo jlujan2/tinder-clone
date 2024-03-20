@@ -22,18 +22,6 @@ const Onboarding = () => {
 
   let navigate = useNavigate()
 
-  const handleChange = (e) => {
-    const value = e.target.value === 'checkbox' ? e.target.checked : e.target.value
-    const name = e.target.name
-
-    setFormdata((prevState) => ({
-      ...prevState,
-      [name]: value
-    }))
-  };
-
-  console.log(formData)
-
   const handleSubmit = async (e) => {
     e.preventDefault()
     try{
@@ -43,7 +31,16 @@ const Onboarding = () => {
     } catch(err) {
       console.log(err)
     }
+  };
 
+  const handleChange = (e) => {
+    const value = e.target.value === 'checkbox' ? e.target.checked : e.target.value
+    const name = e.target.name
+
+    setFormdata((prevState) => ({
+      ...prevState,
+      [name]: value
+    }))
   };
 
   return (
