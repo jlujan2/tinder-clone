@@ -17,7 +17,7 @@ const Home = () => {
       window.location.reload()
       return
     }
-
+    
     setShowModal(true);
     setIsSignUp(true);
   };

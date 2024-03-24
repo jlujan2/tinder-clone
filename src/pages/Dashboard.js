@@ -10,12 +10,16 @@ const Dashboard = () => {
   const [cookies, setCookies, removeCookie] = useCookies(['user'])
 
   const userId = cookies.UserId
+  const authToken = cookies.AuthToken
+  const headers = {'Authorization': `Bearer ${authToken}`}
 
   const getUser = async () => {
+    const headers = {'Authorization': `Bearer ${authToken}`}
     try {
-      const response = await axios.get('http://localhost:8000/user' , {
-        params: { userId }
-      })
+      const response = await axios.get('http://localhost:8080/api/v1/users' , 
+       {params: {id : userId},
+       headers: {'Authorization': `Bearer ${authToken}`}}
+)
       setUser(response.data)
     } catch(error) {
       console.log(error)
@@ -24,9 +28,10 @@ const Dashboard = () => {
 
   const getGenderedUsers = async () => {
     try{
-      const response = await axios.get('http://localhost:8000/gendered-users', {
-        params: {gender: user?.gender_interest}
-      })
+      const response = await axios.get('http://localhost:8080/api/v1/users/gendered-user', {
+        params: {id: userId, gender: user?.gender_interest},
+        headers: {'Authorization': `Bearer ${authToken}`}}
+      )
       setGenderedUsers(response.data)
     } catch(error) {
       console.log(error)
@@ -46,7 +51,7 @@ const Dashboard = () => {
 
   const updatedMatches = async (matchedUserId) => {
     try {
-      await axios.put('http://localhost:8000/addmatch', {
+      await axios.put('http://localhost:8000/api/v1/match', {
         userId,
         matchedUserId
       })
@@ -67,11 +72,11 @@ const Dashboard = () => {
     console.log(name + " left the screen!");
   };
 
-  const matchedUsersIds = user?.matches.map(({user_id}) => user_id).concat(userId)
+  // const matchedUsersIds = user?.matches?.map(({user_id}) => user_id).concat(userId)
 
-  const filteredGenderedUsers = genderedUsers?.filter(
-    genderedUser => !matchedUsersIds.includes(genderedUser.user_id)
-  )
+  // const filteredGenderedUsers = genderedUsers?.filter(
+  //   genderedUser => !matchedUsersIds.includes(genderedUser.user_id)
+  // )
 
   return (
     <>
@@ -80,7 +85,7 @@ const Dashboard = () => {
       <ChatContainer user={user}/>
       <div className="swipe-container">
         <div className="card-container">
-          {filteredGenderedUsers?.map((genderedUser) => (
+          {genderedUsers?.map((genderedUser) => (
             <TinderCard
               className="swipe"
               key={genderedUser.user_id}

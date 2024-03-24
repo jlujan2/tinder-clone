@@ -16,16 +16,18 @@ const Onboarding = () => {
     gender_identity:'man',
     gender_interest:'woman',
     url:'',
-    about:'',
-    matches:[]
+    about:''
+    //matches:[]
   })
 
+  const authToken = cookies.AuthToken
   let navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try{
-      const response = await axios.put('http://localhost:8000/user', {formData})
+      const headers = {'Authorization': `Bearer ${authToken}`}
+      const response = await axios.put('http://localhost:8080/api/v1/users', formData, {headers})
       const success = response.status === 200
       if (success) navigate('/dashboard') 
     } catch(err) {
@@ -34,7 +36,8 @@ const Onboarding = () => {
   };
 
   const handleChange = (e) => {
-    const value = e.target.value === 'checkbox' ? e.target.checked : e.target.value
+    const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value
+    
     const name = e.target.name
 
     setFormdata((prevState) => ({

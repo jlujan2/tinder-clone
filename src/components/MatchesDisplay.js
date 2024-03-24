@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import {useCookies} from 'react-cookie'
 
-const MatchesDisplay = ({ matches, setClickerUser }) => {
+const MatchesDisplay = ({ matches={}, setClickerUser }) => {
     
-    const matchesUserIds = matches.map(({ user_id }) => user_id)
+    const matchesUserIds = matches?.map(({ user_id }) => user_id)
 
     const [matchedProfiles, setMatchedProfiles] =  useState(null)
     const [cookies, setCookies, removeCookie] = useCookies(['user'])
@@ -12,7 +12,7 @@ const MatchesDisplay = ({ matches, setClickerUser }) => {
 
     const getMatches = async () => {
         try {
-            const response = await axios.get('http://localhost:8000/users', {
+            const response = await axios.get('http://localhost:8080/api/v1/users', {
                 params: { userIds: JSON.stringify(matchesUserIds) },
             });
 
