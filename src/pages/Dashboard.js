@@ -51,11 +51,14 @@ const Dashboard = () => {
 
   const updatedMatches = async (matchedUserId) => {
     try {
-      await axios.put('http://localhost:8000/api/v1/match', {
-        userId,
-        matchedUserId
+      const response = await axios.put('http://localhost:8080/api/v1/users/match', 
+        null, 
+       {
+        params : {userId: userId, matchedUserId: matchedUserId},
+        headers: {'Authorization': `Bearer ${authToken}`}
       })
-      getUser()
+      console.log(response)
+      //getUser()
     } catch(error) {
       console.log(error)
     }
@@ -71,12 +74,6 @@ const Dashboard = () => {
   const outOfFrame = (name) => {
     console.log(name + " left the screen!");
   };
-
-  // const matchedUsersIds = user?.matches?.map(({user_id}) => user_id).concat(userId)
-
-  // const filteredGenderedUsers = genderedUsers?.filter(
-  //   genderedUser => !matchedUsersIds.includes(genderedUser.user_id)
-  // )
 
   return (
     <>

@@ -27,7 +27,6 @@ const AuthModel = ({setShowModal, isSignUp}) => {
             const url =  `http://localhost:8080/api/v1/auth/${isSignUp ? 'signup' : 'login'}`
             const response = await axios.post(url , {email, password})
 
-            console.log('aca')
             setCookie('UserId', response.data.userId)
             setCookie('AuthToken', response.data.token)
 

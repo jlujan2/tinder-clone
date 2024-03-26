@@ -2,6 +2,7 @@ import { useState, useEffect } from "react"
 import Chat from "./Chat"
 import ChatInput from "./ChatInput"
 import axios from "axios"
+import {useCookies} from 'react-cookie'
 
 const ChatDisplay = ({user, clickedUser}) => {
     const userId = user?.user_id
@@ -9,10 +10,15 @@ const ChatDisplay = ({user, clickedUser}) => {
     const [userMessages, setUserMessages] = useState(null)
     const [clickedUserMessages, setClickedUserMessages] = useState(null)
 
+    const [cookies, setCookies, removeCookie] = useCookies(['user'])
+
+    const authToken = cookies.AuthToken
+
     const getUserMessages = async () => {
         try{
-            const response = await axios.get('http://localhost:8000/messages', {
-                params: {userId: userId, correspondingUserId: clickedUserId}
+            const response = await axios.get('http://localhost:8080/api/v1/messages', {
+                params: {userId: userId, correspondingUserId: clickedUserId},
+                headers: {'Authorization': `Bearer ${authToken}`}
             })
 
             setUserMessages(response.data);
@@ -23,8 +29,9 @@ const ChatDisplay = ({user, clickedUser}) => {
 
     const getClickedUserMessages = async () => {
         try{
-            const response = await axios.get('http://localhost:8000/messages', {
-                params: {userId: clickedUserId, correspondingUserId: userId}
+            const response = await axios.get('http://localhost:8080/api/v1/messages', {
+                params: {userId: clickedUserId, correspondingUserId: userId},
+                headers: {'Authorization': `Bearer ${authToken}`}
             })
 
             setClickedUserMessages(response.data);
@@ -34,7 +41,7 @@ const ChatDisplay = ({user, clickedUser}) => {
     }
 
     useEffect(() => {
-        getUserMessages(userId, clickedUserId)
+        //getUserMessages(userId, clickedUserId)
         getClickedUserMessages(clickedUserId, userId)
     }, [])
 
